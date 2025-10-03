@@ -1,0 +1,58 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'main/css/aboutPage.css' %}">
+{% endblock %}
+
+{% block title %}
+    Page about
+{% endblock %}
+
+{% block first-frame-content %}
+<!-- Text -->
+<div class="text_about">
+    <h4>
+        The appearance of passages in dungeons with monsters has long terrorized humanity. No one knows where and when new gates will appear and monsters will rush upward. Even the army cannot cope with the invasion of monsters. There is only one strategy available to people: sending a squad of special hunters into a newly opened dungeon. If they destroy the monster quickly,
+        the passage will close and the threat of invasion will temporarily disappear.
+
+        But even among elite hunters there are losers who are unable to defeat mid-level monsters. Brave but physically weak, Song Jinwoo is on a mission to clear out the smallest monsters. Sluggish Dream loses the competition to his teammates, cannot normally improve his level,
+        earns practically nothing. And he really needs the money: his mother is in a coma.
+
+        One day he stumbles upon a secret branch and ends up in a dungeon that has not been cleared by hunters. The guy wakes up in a hospital bed. Once the shock of his resurrection wore off, Son discovered the ability to call up an interface to travel through an alternate world.
+        Here he is stronger, faster, luckier. He needs to level up alone and finally get the highest rank of adventurer.
+    </h4>
+</div>
+
+<!-- Contacts -->
+<table>
+    <tr>
+        <td class="icon">
+            <img src="{% static 'main/img/iconVk.jpg' %}" />
+        </td>
+        <td class="url">
+            <a href="https://vk.com/some_id">VK Community</a>
+        </td>
+        <td class="icon">
+            <img src="{% static 'main/img/iconWs.jpg' %}" />
+        </td>
+        <td class="url">
+            <a href="https://wa.me/some_number">WhatsApp Chat</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="icon">
+            <img src="{% static 'main/img/iconTg.jpg' %}" />
+        </td>
+        <td class="url">
+            <a href="https://t.me/some_id">Telegram Channel</a>
+        </td>
+        <td class="icon">
+            <img src="{% static 'main/img/iconPhone.jpg' %}" />
+        </td>
+        <td class="url">
+            <a>+7 (999) 999-99-99</a>
+        </td>
+    </tr>
+</table>
+{% endblock %}

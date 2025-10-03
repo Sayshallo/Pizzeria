@@ -1,0 +1,143 @@
+
+.first-frame {
+  background-image: url("../img/background-header.png");
+}
+
+.first-frame-content {
+    display: flex;
+    justify-content: center;
+}
+
+
+.suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            background: white;
+            z-index: 1000;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
+
+.col {
+    position: relative;
+    top: 8vh;
+    background-color: #0000005e;
+    border-radius: 20px;
+    height: 70vh;
+}
+
+.row {
+    width: 60vw;
+}
+
+.col label {
+    margin-top: 1vw;
+    margin-left: 2vh;
+}
+
+.dropdown-toggle {
+    --bs-btn-bg: #141414;
+}
+
+.card-data {
+    width: 100%;
+    display: flex;
+}
+
+.card-data input {
+    width: 25%;
+
+}
+
+.card-data label {
+    margin-top: 1vw;
+    width: 25%;
+}
+
+
+
+/*   PIZZAS   */
+
+.summa {
+    width: 90%;
+    height: 16%;
+    background: #141414;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 5%;
+    justify-content: space-around;
+}
+
+.summa p {
+    position: relative;
+    top: 10%;
+}
+
+.pizzas {
+    overflow: auto;
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.pizza_el {
+    width: 100%;
+    height: 20vh;
+    position: relative;
+    justify-content: space-around;
+    display: flex;
+}
+
+.pizza_info {
+    top: 10%;
+    width: 50%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+
+}
+
+.pizza_el button {
+    position: relative;
+    top: 40%;
+    right: 5%;
+}
+
+.pizza {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingridient {
+    pointer-events: none;
+    width: 25%;
+    position: absolute;
+}
+
+.testo {
+    width: 50%;
+}
+
+.tomato_sauce {
+    width: 50%;
+}
+
+.cream_sauce {
+    width: 30%;
+}

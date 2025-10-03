@@ -1,0 +1,163 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'constructor/css/constructorPage.css' %}">
+{% endblock %}
+
+{% block title %}
+    Constructor
+{% endblock %}
+
+{% block first-frame-content %}
+  <div class="pizza">
+    <img src="{% static 'constructor/img/testo.png' %}" alt="" class="ingridient testo">
+    {% for id, value in sauces.items %}
+            <img src="/static/constructor/img/{{value.img}}.png" alt="" class="ingridient sauce" id="sauce_img_{{ id }}">
+    {% endfor %}
+    {% for id, value in fillings.items %}
+        {% if value.type == 'Мясо' %}
+            <img src="/static/constructor/img/{{value.img}}.png" alt="" class="ingridient" id="fill_img_{{ id }}">
+        {% endif %}
+    {% endfor %}
+    {% for id, value in fillings.items %}
+        {% if value.type == 'Овощи' %}
+            <img src="/static/constructor/img/{{value.img}}.png" alt="" class="ingridient" id="fill_img_{{ id }}">
+        {% endif %}
+    {% endfor %}
+    {% for id, value in fillings.items %}
+        {% if value.type == 'Сыр' %}
+            <img src="/static/constructor/img/{{value.img}}.png" alt="" class="ingridient" id="fill_img_{{ id }}">
+        {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="choise">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Мясо</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Овощи</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link " id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Сыры</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link " id="sause-tab" data-bs-toggle="tab" data-bs-target="#sauce" type="button" role="tab" aria-controls="sauce" aria-selected="false">Соусы</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <table>
+            {% for id, value in fillings.items %}
+              {% if value.type == 'Мясо' %}
+                <tr>
+                  <td> <div>{{ value.name }}</div> </td>
+                  <td> <button id="btn_fill_{{ id }}" onclick="add(this)">+</button> </td>
+                  <td> <p>{{ value.cost }} рублей</p> </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+        </table>
+      </div>
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <table>
+            {% for id, value in fillings.items %}
+              {% if value.type == 'Овощи' %}
+                <tr>
+                  <td> <div>{{ value.name }}</div> </td>
+                  <td> <button id="btn_fill_{{ id }}" onclick="add(this)">+</button> </td>
+                  <td> <p>{{ value.cost }} рублей</p> </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+        </table>
+      </div>
+      <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <table>
+            {% for id, value in fillings.items %}
+              {% if value.type == 'Сыр' %}
+                <tr>
+                  <td> <div>{{ value.name }}</div> </td>
+                  <td> <button id="btn_fill_{{ id }}" onclick="add(this)">+</button> </td>
+                  <td> <p>{{ value.cost }} рублей</p> </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+        </table>
+      </div>
+      <div class="tab-pane fade" id="sauce" role="tabpanel" aria-labelledby="sauce-tab">
+        <table>
+            {% for id, value in sauces.items %}
+                <tr>
+                  <td> <div>{{ value.name }}</div> </td>
+                  <td> <button id="btn_sauce_{{ id }}" onclick="add(this)">+</button> </td>
+                  <td> <p>{{ value.cost }} рублей</p> </td>
+                </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="content">
+      <button type="button" class="btn btn-success slide" id="makeOrder" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+          +
+      </button>
+  </div>
+
+
+
+<form action="{% url 'order' %}" method="get" class="modal fade" id="staticBackdrop" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    {% csrf_token %}
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Укажите характеристики:</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body to-pizza">
+              <div class="option">
+                    <label>Введите название:</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Мясной барон" required/>
+              </div>
+              <div class="option">
+                    <label>Укажите размер:</label>
+                    <select class="form-select" id="size" name="size" required>
+                        {% for id, value in dough.items %}
+                            <option value="{{ value.id }}">{{ value.size }}</option>
+                        {% endfor %}
+                    </select>
+              </div>
+          </div>
+          <div class="modal-footer" style="justify-content: space-around;">
+            <button type="submit" class="btn btn-outline-warning" onclick="check()">К заказу</button>
+          </div>
+        </div>
+      </div>
+</form>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function check() {
+            if (!getCookie('session')) {
+                alert('Пицца не будет добавлена, если вы не зашли под своей учетной записью!');
+                window.location.reload();
+            }
+        }
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+    </script>
+  <script src="{% static 'constructor/js/cookies.js' %}" defer></script>
+  <script src="{% static 'constructor/js/ingridients.js' %}"></script>
+  <script src="{% static 'constructor/js/orderWindow.js' %}"></script>
+{% endblock %}

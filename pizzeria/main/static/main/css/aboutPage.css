@@ -1,0 +1,45 @@
+
+/* --------------------ABOUT-------------------- */
+
+.text_about {
+    width: 60vw;
+    margin-top: 5vh;
+    border-top: 2px solid white;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .text_about h4 {
+        text-align: center;
+        overflow: scroll;
+        height: 60vh;
+        display: block;
+        margin: 10px;
+        border-bottom: 2px solid white;
+    }
+        .text_about h4::-webkit-scrollbar {
+            width: 0;
+        }
+
+table {
+    margin-left: 25%;
+    width: 50%;
+    height: 20%;
+}
+
+table tr {
+    width: 50%;
+}
+    table tr .icon {
+        width: 6vw;
+    padding: 0.5vw;
+    }
+
+        table .icon img {
+            width: 3vw;
+            height: 3vw;
+        }
+
+    table .url a {
+        font-size: 2vw;
+    }

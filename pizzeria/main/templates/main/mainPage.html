@@ -1,0 +1,63 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'main/css/mainPage.css' %}">
+{% endblock %}
+
+{% block title %}
+    Main page
+{% endblock %}
+
+{% block first-frame-content %}
+{% if alert_flag %}
+        <script>
+            alert("Введены неверные данные!");
+            window.location.replace('/');
+        </script>
+{% endif %}
+
+{% if order_done %}
+        <script>
+            alert("Ожидайте заказаа!");
+            window.location.replace('/');
+        </script>
+{% endif %}
+
+<div >
+    <h1 class="hello-text">Уютная пиццерия с атмосферой итальянской традиции</h1>
+    <p class="hello-text" style="font-size: 3vw;">Приходи за пиццей, уходи с улыбкой)</p>
+</div>
+{% endblock %}
+
+{% block second-frame-content %}
+<div class="chiefs">
+      <div class="chief-container">
+        <div class="chief-block">
+          <img src="{% static 'main/img/Sanya-cooker.png' %}" alt="cooker" />
+          <div class="chief-text">
+            <div class="name" style="font-size: 2vw;">Александр Иванов</div>
+             Обладатель номинации "Нож России",<br>
+             обладает невероятно быстрым нарезанием любых продуктов.
+          </div>
+        </div>
+        <div class="chief-block">
+          <img src="{% static 'main/img/Eugene-cooker.png' %}" alt="cooker">
+          </img>
+          <div class="chief-text">
+            <div class="name" style="font-size: 2vw;">Женечка Ким</div>
+            Обладатель своего ресторана в Корее под названием "Хон Чхван га",<br>
+            также получил 1 звезду Мишлен и является победителем в номинации "Лапша года".
+          </div>
+        </div>
+        <div class="chief-block">
+          <img src="{% static 'main/img/Vyacheslav-cooker.png' %}" alt="cooker" />
+          <div class="chief-text">
+            <div class="name" style="font-size: 2vw;">Вячеслав Тестомес</div>
+            Известен своим невероятным рецептом буженины под его фирменным соусом и подачей,<br>
+            обладатель ресторана в Москве под названием "Meat V.I.P.".
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+
+.first-frame {
+  background-image: url("../img/background-header.png");
+}
+
+.first-frame-content {
+    display: flex;
+    justify-content: center;
+}
+

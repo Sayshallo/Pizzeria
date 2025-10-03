@@ -1,0 +1,108 @@
+
+.first-frame {
+  background-image: url("../img/backgr.png");
+}
+
+.pizza {
+  width: 50vw;
+  height: 70vh;
+  margin-top: 19vh;
+  margin-left: -2.5vw;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.pizza img {
+    pointer-events: none;
+}
+
+.ingridient {
+  position: absolute;
+  width: 47%;
+  opacity: 0;
+  transition: 0.2s ease;
+}
+
+.testo {
+  width: 100%;
+  margin-bottom: 3%;
+  opacity: 1;
+}
+
+.sauce {
+  width: 100%;
+}
+
+#sauce_img_3 {
+  margin-right: 1%;
+  margin-top: 1%;
+  width: 61%;
+}
+
+.choise {
+  position: absolute;
+  width: 50vw;
+  margin-top: 5vh;
+  right: 2.5vw;
+  background-color: #00000094;
+  border-radius: 20px;
+}
+
+table :nth-child(1n){
+  margin: 1.2vw;
+}
+
+tr button {
+  border-radius: 8px;
+  width: 3vw;
+  background: none;
+  border: none;
+  transition: 0.2s ease;
+}
+
+.green {
+  background-color: green;
+}
+
+
+/* --------------------SLIDE BAR-------------------- */
+
+.slide {
+    position: absolute;
+    right: 5%;
+    bottom: 5%;
+    color: #000;
+}
+
+#content {
+    height: 80vh;
+  padding: 20px;
+  transition: margin-left 0.7s;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+#content button {
+    width: 5vw;
+    height: 5vh;
+    font-size: 18px;
+}
+
+.to-pizza {
+    display: flex;
+}
+
+.to-pizza .option label{
+    margin-left: 1vw;
+}
+
+.to-pizza :nth-child(even){
+    margin-left: 1vw;
+}
+
+.modal-footer button a {
+    text-decoration: none;
+}

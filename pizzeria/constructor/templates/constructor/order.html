@@ -1,0 +1,293 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'constructor/css/orderPage.css' %}">
+{% endblock %}
+
+{% block title %}
+    Order
+{% endblock %}
+
+{% block first-frame-content %}
+<form action="{% url 'main' %}" method="get">
+        {% csrf_token %}
+    <div class="row align-items-center">
+        <div class="col">
+            <label class="form-label">Адрес доставки</label>
+             <div style="position: relative;">
+                <input type="text" name="address" class="form-control order-data" id="locationInput" placeholder="Введите город, улицу, дом" autocomplete="off">
+                <div id="suggestions" class="suggestions"></div>
+            </div>
+            <label class="form-label">Время доставки</label>
+            <div class="btn-group dropend">
+              <button type="button" class="btn btn-secondary dropdown-toggle order-data" id="dropdown-toggle" onclick="getTime()" data-bs-toggle="dropdown" aria-expanded="false">
+                -выберите-
+              </button>
+              <ul class="dropdown-menu" id="dropdown-menu">
+                <li><a class="dropdown-item" href="#">40-50 минут</a></li>
+              </ul>
+            </div>
+            </br>
+            <label class="form-label">Комментарий</label>
+            <textarea class="form-control" name="comment" id="exampleFormControlTextarea1" rows="3" autocomplete="off"></textarea>
+            </br>
+            <label class="form-label" style="font-weight:bold;margin:0;">Данные для оплаты</label>
+            </br>
+            <label class="form-label">Номер карты</label>
+            <input type="text" name="card-numer" class="form-control order-data card-data-input" oninput="changeColor(this, 16)" onkeypress="return isCard(event)" onpaste="return false;" minlength="16" maxlength="16" autocomplete="off"/>
+            </br>
+            <div class="card-data">
+                <label class="form-label">Срок действия</label>
+                <input type="text" name="card-exp" class="form-control order-data card-data-input" oninput="changeColor(this, 4)" onkeypress="return isCard(event)" onpaste="return false;" minlength="4" maxlength="4" placeholder="MM/YY" autocomplete="off"/>
+                <label class="form-label">Код</label>
+                <input type="text" name="card-code" class="form-control order-data card-data-input" oninput="changeColor(this, 3)" onkeypress="return isCard(event)" onpaste="return false;" minlength="3" maxlength="3" placeholder="CVV" autocomplete="off"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="pizzas">
+                {% for sauce_id, sauce_value in sauces.items %}
+                    {% for pizza_id, pizza_value in ids.items %}
+                        {% if pizza_id == sauce_id %}
+                    <div class="pizza_el" id="pizza_{{ pizza_value }}">
+                        {% endif %}
+                    {% endfor %}
+                        <div class="pizza_info">
+                            {% for name_id, name_value in names.items %}
+                                {% if sauce_id == name_id %}
+                                    <p style="font-weight: 600; text-decoration: underline;">{{ name_value }}</p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for cost_id, cost_value in cost.items %}
+                                {% if cost_id == sauce_id %}
+                                    <p>{{ cost_value }} рубликов</p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="pizza">
+                            <img src="{% static 'constructor/img/testo.png' %}" alt="" class="ingridient testo">
+                            {% if sauce_value == 'cream_sauce' %}
+                                <img src="/static/constructor/img/{{sauce_value}}.png" alt="" class="ingridient cream_sauce" id="sauce_img_{{ sauce_id }}">
+                            {% endif %}
+                            {% if sauce_value != 'cream_sauce' %}
+                                <img src="/static/constructor/img/{{sauce_value}}.png" alt="" class="ingridient tomato_sauce" id="sauce_img_{{ sauce_id }}">
+                            {% endif %}
+                            <img src="/static/constructor/img/{{sauce_value}}.png" alt="" class="ingridient sauce" id="sauce_img_{{ sauce_id }}">
+                            {% for fill_id, fill_value in filling.items %}
+                                {% if sauce_id == fill_id %}
+                                    {% for fill in fill_value %}
+                                        <img src="/static/constructor/img/{{fill}}.png" alt="" class="ingridient" id="fill_img_{{ fill_id }}">
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% for pizza_id, pizza_value in ids.items %}
+                            {% if pizza_id == sauce_id %}
+                                <button type="button" class="btn-close" aria-label="Закрыть" id="btn_{{ pizza_value }}" onclick="deletePizza(this.id);"></button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="summa" id="summa">
+                <p>{{ summa }} рубликов</p>
+                <input type="text" value="{{ summa }}" name="cost" style="display:none;"/>
+                <button type="submit" id="make_order" style="display:none;"></button>
+                <button type="button" class="btn btn-outline-success" onclick="doOrder();">Заказать</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        window.onunload = function() {
+            null; // Это необходимо для того, чтобы браузер не кэшировал страницу
+        };
+
+        // ПРОВЕРКА ВВЕДЕННЫХ ДАННЫХ ----------------------------------------------------------------
+
+        function doOrder() {
+            let nodeList = document.querySelectorAll('.order-data');
+            for (let i = 0; i < nodeList.length; i++) {
+                if(!nodeList[i].value == false) { continue; }
+                else { alert("Заполните все поля!"); return; }
+            }
+
+            nodeList = document.querySelectorAll('.card-data-input');
+            for (let i = 0; i < nodeList.length; i++) {
+                console.log();
+                if(nodeList[i].value.toString().length == nodeList[i].getAttribute('minlength')) { continue; }
+                else { alert("Введите данные карты корректно!"); return; }
+            }
+
+            document.getElementById('make_order').click();
+        }
+
+        // ДЛЯ УДАЛЕНИЯ ПИЦЦЫ ----------------------------------------------------------------
+
+        function deletePizza(button_id) {
+            current_pizza = document.getElementById('pizza_' + button_id.split('_')[1]);
+            current_pizza.style.display = 'none';
+            document.cookie = "deletingPizza="+button_id.split('_')[1];
+            window.location.reload();
+        }
+
+        // ДЛЯ КОРРЕКТНОГО ДОБАВЛЕНИЯ ПИЦЦЫ ----------------------------------------------------------------
+        if (getCookie('isLoad')=='true') {
+            console.log(getCookie('isLoad'));
+            window.location.reload();
+            deleteCookie('isLoad');
+         }
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function deleteCookie(name) {
+          // Устанавливаем "просроченную" дату для куки, создавая своеобразный временной парадокс
+          document.cookie = name + '=; Max-Age=0;';
+        }
+
+        // ПРОВЕРКА НА ВВОД ТОЛЬКО ЦИФР ----------------------------------------------------------------
+
+        function isCard(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+
+            if ( (charCode > 31 && charCode < 48) || charCode > 57)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // СМЕНА ЦВЕТА В ЗАВИСИМОСТИ ОТ КОЛИЧЕСТВА ЦИФР В ПОЛЕ -----------------------------------------------
+
+        function changeColor(input, max) {
+            input.style.borderColor = "gray";
+            if (input.value.toString().length < max) { input.style.boxShadow = "0 0 20px #870000"; }
+            else if (input.value.toString().length == 0) { input.style.boxShadow = "none"; }
+            else { input.style.boxShadow = "rgb(20 135 0) 0px 0px 20px"; }
+        }
+
+
+        // ДЛЯ УКАЗАНИЯ ВРЕМЕНИ ДОСТАВКИ, ОТТАЛКИВАЯСЬ ОТ ТЕКУЩЕГО --------------------------------------------
+
+        function getTime(){
+
+            let list = document.getElementById('dropdown-menu');
+
+            if (list.childNodes.length > 3) { return; }
+
+            let currentDate = new Date();
+            let newMin = currentDate.getMinutes();
+            let newHour = currentDate.getHours();
+            let deliveryTime = 50;
+
+            if (newMin+deliveryTime > 60) { newMin = newMin+deliveryTime - 60; newHour++; }
+            else if (newMin+deliveryTime == 60) { newMin = 0; newHour++; }
+            else { newMin = newMin+deliveryTime; }
+
+            if (newMin > 0 && newMin <= 30) { newMin = 30; }
+            else if (newMin > 30 && newMin < 60) { newMin = 0; newHour++; }
+            else if (newMin == 0) { newHour++; }
+
+
+            for (let i = 0; i < i+1; i++) {
+                if (i == 0 && (newHour > 22 || newHour < 10) ) { alert("Сейчас мы закрыты. Попробуйте заказать когда мы откроемся)!"); return; }
+                if (newHour > 22) {
+                    // Получаем элемент
+                    let buttons = document.querySelectorAll('.dropdown-item');
+
+                    // Добавляем обработчик события для каждого элемента
+                    buttons.forEach(item => {
+                        item.addEventListener('click', changeTime);
+                    });
+                    return;
+                }
+
+                let timeText = newHour + ":" + newMin;
+                if (newMin == 0) { list.appendChild(creatingMenuItems(timeText+"0")); }
+                else { list.appendChild(creatingMenuItems(timeText)); }
+
+                if (newMin == 30) { newMin = 0; newHour++; }
+                if (newMin == 0) { newMin = 30; }
+            }
+        }
+
+        function changeTime() {
+            if (this.classList.contains('active')) {
+                return false;
+            }
+
+            current_time = document.getElementById('dropdown-toggle');
+            current_time.innerText = this.innerText;
+            current_time.value = this.innerText;
+
+            document.getElementById('form_time').value = this.innerText;
+
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+            // Пример: выводим каждый элемент в консоль
+            dropdownItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            this.classList.add('active');
+        }
+
+
+        const creatingMenuItems = (name) => {
+              let liElement = document.createElement("li");
+              let aTag = document.createElement("a");
+              aTag.textContent = name;
+              aTag.classList.add("dropdown-item");
+              aTag.href = "#";
+              liElement.appendChild(aTag);
+              return liElement;
+        };
+
+
+        // ПОИСК МЕСТОПОЛОЖЕНИЯ ПО ВВОДУ ----------------------------------------------------------------
+
+        const input = document.getElementById('locationInput');
+        const suggestionsContainer = document.getElementById('suggestions');
+
+        input.addEventListener('input', async () => {
+            const query = input.value;
+            if (query.length < 3) {
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            // Запрос к Nominatim (OpenStreetMap)
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+            const data = await response.json();
+
+            suggestionsContainer.innerHTML = '';
+            data.forEach(suggestion => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = `${suggestion.display_name}`;
+                div.onclick = () => {
+                    input.value = suggestion.display_name;
+                    suggestionsContainer.style.display = 'none';
+                };
+                suggestionsContainer.appendChild(div);
+            });
+
+            suggestionsContainer.style.display = suggestionsContainer.childNodes.length ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!suggestionsContainer.contains(e.target) && e.target !== input) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock %}
